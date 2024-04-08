@@ -50,6 +50,8 @@ public class QuickNav {
             if (data.button10.render) buttons.add(parseButton(data.button10, screenTitle, 9));
             if (data.button11.render) buttons.add(parseButton(data.button11, screenTitle, 10));
             if (data.button12.render) buttons.add(parseButton(data.button12, screenTitle, 11));
+            if (data.button13.render) buttons.add(parseButton(data.button13, screenTitle, 12));
+            if (data.button14.render) buttons.add(parseButton(data.button14, screenTitle, 13));
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
@@ -57,7 +59,7 @@ public class QuickNav {
     }
 
     private static QuickNavButton parseButton(SkyblockerConfig.QuickNavItem buttonInfo, String screenTitle, int id) throws CommandSyntaxException {
-    	SkyblockerConfig.ItemData itemData = buttonInfo.item;
+        SkyblockerConfig.ItemData itemData = buttonInfo.item;
         String nbtString = "{id:\"minecraft:" + itemData.itemName.toLowerCase(Locale.ROOT) + "\",Count:1";
         if (itemData.nbt.length() > 2) nbtString += "," + itemData.nbt;
         nbtString += "}";
