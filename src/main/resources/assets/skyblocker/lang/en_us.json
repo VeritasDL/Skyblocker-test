@@ -179,6 +179,7 @@
 
   "text.autoconfig.skyblocker.category.quickNav": "Quick Navigation",
   "text.autoconfig.skyblocker.option.quickNav.enableQuickNav": "Enable Quick Navigation",
+  "text.autoconfig.skyblocker.option.quickNav.enableExtendedQuickNav": "Enable Extended Quick Navigation",
   "text.autoconfig.skyblocker.option.quickNav.button": "Button %d",
   "text.autoconfig.skyblocker.option.quickNav.button.render": "Render",
   "text.autoconfig.skyblocker.option.quickNav.button.item": "Item",

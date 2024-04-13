@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.PatternSyntaxException;
-
 public class QuickNav {
     private static final String skyblockHubIconNbt = "{id:\"minecraft:player_head\",Count:1,tag:{SkullOwner:{Id:[I;-300151517,-631415889,-1193921967,-1821784279],Properties:{textures:[{Value:\"e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDdjYzY2ODc0MjNkMDU3MGQ1NTZhYzUzZTA2NzZjYjU2M2JiZGQ5NzE3Y2Q4MjY5YmRlYmVkNmY2ZDRlN2JmOCJ9fX0=\"}]}}}}";
     private static final String dungeonHubIconNbt = "{id:\"minecraft:player_head\",Count:1,tag:{SkullOwner:{Id:[I;1605800870,415127827,-1236127084,15358548],Properties:{textures:[{Value:\"e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzg5MWQ1YjI3M2ZmMGJjNTBjOTYwYjJjZDg2ZWVmMWM0MGExYjk0MDMyYWU3MWU3NTQ3NWE1NjhhODI1NzQyMSJ9fX0=\"}]}}}}";
@@ -50,8 +49,10 @@ public class QuickNav {
             if (data.button10.render) buttons.add(parseButton(data.button10, screenTitle, 9));
             if (data.button11.render) buttons.add(parseButton(data.button11, screenTitle, 10));
             if (data.button12.render) buttons.add(parseButton(data.button12, screenTitle, 11));
-            if (data.button13.render) buttons.add(parseButton(data.button13, screenTitle, 12));
-            if (data.button14.render) buttons.add(parseButton(data.button14, screenTitle, 13));
+            if (SkyblockerConfigManager.get().quickNav.enableExtendedQuickNav) {
+                if (data.button13.render) buttons.add(parseButton(data.button13, screenTitle, 12));
+                if (data.button14.render) buttons.add(parseButton(data.button14, screenTitle, 13));
+            }
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
@@ -59,7 +60,7 @@ public class QuickNav {
     }
 
     private static QuickNavButton parseButton(SkyblockerConfig.QuickNavItem buttonInfo, String screenTitle, int id) throws CommandSyntaxException {
-        SkyblockerConfig.ItemData itemData = buttonInfo.item;
+    	SkyblockerConfig.ItemData itemData = buttonInfo.item;
         String nbtString = "{id:\"minecraft:" + itemData.itemName.toLowerCase(Locale.ROOT) + "\",Count:1";
         if (itemData.nbt.length() > 2) nbtString += "," + itemData.nbt;
         nbtString += "}";

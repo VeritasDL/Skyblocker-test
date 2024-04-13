@@ -43,6 +43,9 @@ public class SkyblockerConfig {
 		public boolean enableQuickNav = true;
 
 		@SerialEntry
+		public boolean enableExtendedQuickNav = true;
+
+		@SerialEntry
 		public QuickNavItem button1 = new QuickNavItem(true, new ItemData("diamond_sword"), "Your Skills", "/skills");
 
 		@SerialEntry
