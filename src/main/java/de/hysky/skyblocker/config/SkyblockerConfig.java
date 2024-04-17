@@ -44,6 +44,9 @@ public class SkyblockerConfig {
 		public boolean enableQuickNav = true;
 
 		@SerialEntry
+		public boolean enableExtendedQuickNav = true;
+
+		@SerialEntry
 		public QuickNavItem button1 = new QuickNavItem(true, new ItemData("diamond_sword"), "Your Skills", "/skills");
 
 		@SerialEntry
@@ -104,6 +107,12 @@ public class SkyblockerConfig {
 
 		@SerialEntry
 		public QuickNavItem button12 = new QuickNavItem(true, new ItemData("crafting_table"), "Craft Item", "/craft");
+
+		@SerialEntry
+		public QuickNavItem button13 = new QuickNavItem(true, new ItemData("bedrock"), "New Quick Nav", "/command");
+
+		@SerialEntry
+		public QuickNavItem button14 = new QuickNavItem(true, new ItemData("chest"), "New Quick Nav 2", "/command");
 	}
 
 	public static class QuickNavItem {
