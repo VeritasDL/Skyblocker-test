@@ -44,6 +44,7 @@ import de.hysky.skyblocker.skyblock.waypoint.OrderedWaypoints;
 import de.hysky.skyblocker.skyblock.waypoint.Relics;
 import de.hysky.skyblocker.utils.ApiUtils;
 import de.hysky.skyblocker.utils.NEURepoManager;
+import de.hysky.skyblocker.utils.ProfileUtils;
 import de.hysky.skyblocker.utils.Utils;
 import de.hysky.skyblocker.utils.chat.ChatMessageListener;
 import de.hysky.skyblocker.utils.discord.DiscordRPCManager;
@@ -160,6 +161,7 @@ public class SkyblockerMod implements ClientModInitializer {
         MuseumItemCache.init();
         SecretsTracker.init();
         ApiUtils.init();
+        ProfileUtils.init();
         Debug.init();
         Kuudra.init();
         RenderHelper.init();
