@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class MobGlow {
+
 	public static boolean shouldMobGlow(Entity entity) {
 		Box box = entity.getBoundingBox();
 
@@ -44,14 +45,14 @@ public class MobGlow {
 
 					// Regular Mobs
 					if (!(entity instanceof ArmorStandEntity)) {
-						List<ArmorStandEntity> armorStands = getArmorStands(entity);
+						List<ArmorStandEntity> armorStands = MobGlow.getArmorStands(entity);
 
 						if (!armorStands.isEmpty() && armorStands.get(0).getName().getString().contains("✯"))
 							return SkyblockerConfigManager.get().locations.dungeons.starredMobGlow;
 					}
 
 					// Bats
-					return SkyblockerConfigManager.get().locations.dungeons.starredMobGlow && entity instanceof BatEntity;
+					return (SkyblockerConfigManager.get().locations.dungeons.starredMobGlow || SkyblockerConfigManager.get().locations.dungeons.starredMobBoundingBoxes) && entity instanceof BatEntity;
 				}
 
 				// Rift
