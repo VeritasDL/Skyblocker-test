@@ -1,6 +1,7 @@
 package de.hysky.skyblocker.config;
 
 import de.hysky.skyblocker.SkyblockerMod;
+import de.hysky.skyblocker.skyblock.item.CustomArmorAnimatedDyes;
 import de.hysky.skyblocker.skyblock.item.CustomArmorTrims;
 import de.hysky.skyblocker.utils.chat.ChatFilterResult;
 import de.hysky.skyblocker.utils.waypoint.Waypoint;
@@ -259,6 +260,9 @@ public class SkyblockerConfig {
 		public SearchOverlay searchOverlay = new SearchOverlay();
 
 		@SerialEntry
+		public FancyAuctionHouse fancyAuctionHouse = new FancyAuctionHouse();
+
+		@SerialEntry
 		public List<Integer> lockedSlots = new ArrayList<>();
 
 		@SerialEntry
@@ -272,6 +276,9 @@ public class SkyblockerConfig {
 
 		@SerialEntry
 		public Object2ObjectOpenHashMap<String, CustomArmorTrims.ArmorTrimId> customArmorTrims = new Object2ObjectOpenHashMap<>();
+
+		@SerialEntry
+		public Object2ObjectOpenHashMap<String, CustomArmorAnimatedDyes.AnimatedDye> customAnimatedDyes = new Object2ObjectOpenHashMap<>();
 	}
 
 	public static class TabHudConf {
@@ -307,41 +314,34 @@ public class SkyblockerConfig {
 		@SerialEntry
 		public boolean enableBars = true;
 
+		// Kept in for backwards compatibility, remove if needed
 		@SerialEntry
-		public BarPositions barPositions = new BarPositions();
+		public OldBarPositions barPositions = new OldBarPositions();
 	}
 
-	public static class BarPositions {
+	/**
+	 * Backwards compat
+	 */
+	public static class OldBarPositions {
 		@SerialEntry
-		public BarPosition healthBarPosition = BarPosition.LAYER1;
+		public OldBarPosition healthBarPosition = OldBarPosition.LAYER1;
 
 		@SerialEntry
-		public BarPosition manaBarPosition = BarPosition.LAYER1;
+		public OldBarPosition manaBarPosition = OldBarPosition.LAYER1;
 
 		@SerialEntry
-		public BarPosition defenceBarPosition = BarPosition.LAYER1;
+		public OldBarPosition defenceBarPosition = OldBarPosition.LAYER1;
 
 		@SerialEntry
-		public BarPosition experienceBarPosition = BarPosition.LAYER1;
+		public OldBarPosition experienceBarPosition = OldBarPosition.LAYER1;
 
 	}
 
-	public enum BarPosition {
-		LAYER1, LAYER2, RIGHT, NONE;
-
-		@Override
-		public String toString() {
-			return I18n.translate("text.autoconfig.skyblocker.option.general.bars.barpositions." + name());
-		}
-
-		public int toInt() {
-			return switch (this) {
-				case LAYER1 -> 0;
-				case LAYER2 -> 1;
-				case RIGHT -> 2;
-				case NONE -> -1;
-			};
-		}
+	/**
+	 * Backwards compat
+	 */
+	public enum OldBarPosition {
+		LAYER1, LAYER2, RIGHT, NONE
 	}
 
 	public static class Experiments {
@@ -358,6 +358,18 @@ public class SkyblockerConfig {
 	public static class Fishing {
 		@SerialEntry
 		public boolean enableFishingHelper = true;
+
+		@SerialEntry
+		public boolean enableFishingTimer = false;
+
+		@SerialEntry
+		public boolean changeTimerColor = true;
+
+		@SerialEntry
+		public float fishingTimerScale = 1f;
+
+		@SerialEntry
+		public boolean hideOtherPlayersRods = false;
 	}
 
 	public static class FairySouls {
@@ -409,6 +421,133 @@ public class SkyblockerConfig {
 
 		@SerialEntry
 		public boolean enableQuiverWarningAfterDungeon = true;
+	}
+
+	public static class ItemList {
+		@SerialEntry
+		public boolean enableItemList = true;
+	}
+
+	public static class ItemTooltip {
+		@SerialEntry
+		public boolean enableNPCPrice = true;
+
+		@SerialEntry
+		public boolean enableMotesPrice = true;
+
+		@SerialEntry
+		public boolean enableAvgBIN = true;
+
+		@SerialEntry
+		public Average avg = Average.THREE_DAY;
+
+		@SerialEntry
+		public boolean enableLowestBIN = true;
+
+		@SerialEntry
+		public boolean enableBazaarPrice = true;
+
+		@SerialEntry
+		public boolean enableObtainedDate = true;
+
+		@SerialEntry
+		public boolean enableMuseumInfo = true;
+
+		@SerialEntry
+		public boolean enableExoticTooltip = true;
+
+		@SerialEntry
+		public boolean enableAccessoriesHelper = true;
+	}
+
+	public enum Average {
+		ONE_DAY, THREE_DAY, BOTH;
+
+		@Override
+		public String toString() {
+			return I18n.translate("text.autoconfig.skyblocker.option.general.itemTooltip.avg." + name());
+		}
+	}
+
+	public static class ItemInfoDisplay {
+		@SerialEntry
+		public boolean attributeShardInfo = true;
+
+		@SerialEntry
+		public boolean itemRarityBackgrounds = false;
+
+		@SerialEntry
+		public RarityBackgroundStyle itemRarityBackgroundStyle = RarityBackgroundStyle.CIRCULAR;
+
+		@SerialEntry
+		public float itemRarityBackgroundsOpacity = 1f;
+	}
+
+	public enum RarityBackgroundStyle {
+		CIRCULAR(new Identifier(SkyblockerMod.NAMESPACE, "item_rarity_background_circular")),
+		SQUARE(new Identifier(SkyblockerMod.NAMESPACE, "item_rarity_background_square"));
+
+		public final Identifier tex;
+
+		RarityBackgroundStyle(Identifier tex) {
+			this.tex = tex;
+		}
+
+		@Override
+		public String toString() {
+			return switch (this) {
+				case CIRCULAR -> "Circular";
+				case SQUARE -> "Square";
+			};
+		}
+	}
+
+	public static class ItemProtection {
+		@SerialEntry
+		public SlotLockStyle slotLockStyle = SlotLockStyle.FANCY;
+	}
+
+	public enum SlotLockStyle {
+		CLASSIC(new Identifier(SkyblockerMod.NAMESPACE, "textures/gui/slot_lock.png")),
+		FANCY(new Identifier(SkyblockerMod.NAMESPACE, "textures/gui/fancy_slot_lock.png"));
+
+		public final Identifier tex;
+
+		SlotLockStyle(Identifier tex) {
+			this.tex = tex;
+		}
+
+		@Override
+		public String toString() {
+			return switch (this) {
+				case CLASSIC -> "Classic";
+				case FANCY -> "FANCY";
+			};
+		}
+	}
+
+	public static class WikiLookup {
+		@SerialEntry
+		public boolean enableWikiLookup = true;
+
+		@SerialEntry
+		public boolean officialWiki = true;
+	}
+
+	public static class ChestValue {
+		@SerialEntry
+		public boolean enableChestValue = true;
+
+		@SerialEntry
+		public Formatting color = Formatting.DARK_GREEN;
+
+		@SerialEntry
+		public Formatting incompleteColor = Formatting.BLUE;
+	}
+
+	public static class SpecialEffects {
+		@SerialEntry
+		public boolean rareDungeonDropEffects = true;
 	}
 
 	public static class Hitbox {
@@ -515,145 +654,12 @@ public class SkyblockerConfig {
 		public List<String> auctionHistory = new ArrayList<>();
 	}
 
-	public static class RichPresence {
+	public static class FancyAuctionHouse {
 		@SerialEntry
-		public boolean enableRichPresence = false;
-
-		@SerialEntry
-		public Info info = Info.LOCATION;
+		public boolean enabled = true;
 
 		@SerialEntry
-		public boolean cycleMode = false;
-
-		@SerialEntry
-		public String customMessage = "Playing Skyblock";
-	}
-
-	public static class ItemList {
-		@SerialEntry
-		public boolean enableItemList = true;
-	}
-
-	public enum Average {
-		ONE_DAY, THREE_DAY, BOTH;
-
-		@Override
-		public String toString() {
-			return I18n.translate("text.autoconfig.skyblocker.option.general.itemTooltip.avg." + name());
-		}
-	}
-
-	public static class ItemTooltip {
-		@SerialEntry
-		public boolean enableNPCPrice = true;
-
-		@SerialEntry
-		public boolean enableMotesPrice = true;
-
-		@SerialEntry
-		public boolean enableAvgBIN = true;
-
-		@SerialEntry
-		public Average avg = Average.THREE_DAY;
-
-		@SerialEntry
-		public boolean enableLowestBIN = true;
-
-		@SerialEntry
-		public boolean enableBazaarPrice = true;
-
-		@SerialEntry
-		public boolean enableObtainedDate = true;
-
-		@SerialEntry
-		public boolean enableMuseumInfo = true;
-
-		@SerialEntry
-		public boolean enableExoticTooltip = true;
-
-		@SerialEntry
-		public boolean enableAccessoriesHelper = true;
-	}
-
-	public static class ItemInfoDisplay {
-		@SerialEntry
-		public boolean attributeShardInfo = true;
-
-		@SerialEntry
-		public boolean itemRarityBackgrounds = false;
-
-		@SerialEntry
-		public RarityBackgroundStyle itemRarityBackgroundStyle = RarityBackgroundStyle.CIRCULAR;
-
-		@SerialEntry
-		public float itemRarityBackgroundsOpacity = 1f;
-	}
-
-	public enum RarityBackgroundStyle {
-		CIRCULAR(new Identifier(SkyblockerMod.NAMESPACE, "item_rarity_background_circular")),
-		SQUARE(new Identifier(SkyblockerMod.NAMESPACE, "item_rarity_background_square"));
-
-		public final Identifier tex;
-
-		RarityBackgroundStyle(Identifier tex) {
-			this.tex = tex;
-		}
-
-		@Override
-		public String toString() {
-			return switch (this) {
-				case CIRCULAR -> "Circular";
-				case SQUARE -> "Square";
-			};
-		}
-	}
-
-	public static class ItemProtection {
-		@SerialEntry
-		public SlotLockStyle slotLockStyle = SlotLockStyle.FANCY;
-	}
-
-	public enum SlotLockStyle {
-		CLASSIC(new Identifier(SkyblockerMod.NAMESPACE, "textures/gui/slot_lock.png")),
-		FANCY(new Identifier(SkyblockerMod.NAMESPACE, "textures/gui/fancy_slot_lock.png"));
-
-		public final Identifier tex;
-
-		SlotLockStyle(Identifier tex) {
-			this.tex = tex;
-		}
-
-		@Override
-		public String toString() {
-			return switch (this) {
-				case CLASSIC -> "Classic";
-				case FANCY -> "FANCY";
-			};
-		}
-	}
-
-	public static class WikiLookup {
-		@SerialEntry
-		public boolean enableWikiLookup = true;
-
-		@SerialEntry
-		public boolean officialWiki = true;
-	}
-
-	public static class ChestValue {
-		@SerialEntry
-		public boolean enableChestValue = true;
-
-		@SerialEntry
-		public Formatting color = Formatting.DARK_GREEN;
-
-		@SerialEntry
-		public Formatting incompleteColor = Formatting.BLUE;
-	}
-
-	public static class SpecialEffects {
-		@SerialEntry
-		public boolean rareDungeonDropEffects = true;
+		public boolean highlightCheapBIN = true;
 	}
 
 	public static class Locations {
@@ -717,7 +723,10 @@ public class SkyblockerConfig {
 		public boolean playerSecretsTracker = false;
 
 		@SerialEntry
-		public boolean starredMobGlow = true;
+		public boolean starredMobGlow = false;
+
+		@SerialEntry
+		public boolean starredMobBoundingBoxes = true;
 
 		@SerialEntry
 		public boolean solveThreeWeirdos = true;
@@ -861,6 +870,15 @@ public class SkyblockerConfig {
 		public String dungeonScore300Message = "300 Score Reached!";
 
 		@SerialEntry
+		public boolean enableDungeonCryptsMessage = true;
+
+		@SerialEntry
+		public int dungeonCryptsMessageThreshold = 250;
+
+		@SerialEntry
+		public String dungeonCryptsMessage = "We only have [crypts] crypts out of 5, we need more!";
+
+		@SerialEntry
 		public boolean enableScoreHUD = true;
 
 		@SerialEntry
@@ -944,6 +962,9 @@ public class SkyblockerConfig {
 
 		@SerialEntry
 		public boolean solvePuzzler = true;
+
+		@SerialEntry
+		public boolean metalDetectorHelper = true;
 
 		@SerialEntry
 		public DwarvenHud dwarvenHud = new DwarvenHud();
@@ -1076,9 +1097,17 @@ public class SkyblockerConfig {
 	}
 
 	public static class TheEnd {
+		@SerialEntry
+		public boolean enableEnderNodeHelper = true;
 
 		@SerialEntry
 		public boolean hudEnabled = true;
+
+		@SerialEntry
+		public boolean zealotKillsEnabled = true;
+
+		@SerialEntry
+		public boolean protectorLocationEnabled = true;
 
 		@SerialEntry
 		public boolean waypoint = true;
@@ -1243,6 +1272,20 @@ public class SkyblockerConfig {
 		public int announcementLength = 60;
 		@SerialEntry
 		public int announcementScale = 3;
+	}
+
+	public static class RichPresence {
+		@SerialEntry
+		public boolean enableRichPresence = false;
+
+		@SerialEntry
+		public Info info = Info.LOCATION;
+
+		@SerialEntry
+		public boolean cycleMode = false;
+
+		@SerialEntry
+		public String customMessage = "Playing Skyblock";
 	}
 
 	public enum Info {

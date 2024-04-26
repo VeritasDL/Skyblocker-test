@@ -2,6 +2,7 @@ package de.hysky.skyblocker.config.categories;
 
 import de.hysky.skyblocker.config.ConfigUtils;
 import de.hysky.skyblocker.config.SkyblockerConfig;
+import de.hysky.skyblocker.skyblock.fancybars.StatusBarsConfigScreen;
 import de.hysky.skyblocker.skyblock.shortcut.ShortcutsConfigScreen;
 import de.hysky.skyblocker.utils.render.title.TitleContainerConfigScreen;
 import de.hysky.skyblocker.utils.waypoint.Waypoint;
@@ -158,33 +159,10 @@ public class GeneralCategory {
 										newValue -> config.general.bars.enableBars = newValue)
 								.controller(ConfigUtils::createBooleanController)
 								.build())
-						.option(Option.<SkyblockerConfig.BarPosition>createBuilder()
-								.name(Text.translatable("text.autoconfig.skyblocker.option.general.bars.barpositions.healthBarPosition"))
-								.binding(defaults.general.bars.barPositions.healthBarPosition,
-										() -> config.general.bars.barPositions.healthBarPosition,
-										newValue -> config.general.bars.barPositions.healthBarPosition = newValue)
-								.controller(ConfigUtils::createEnumCyclingListController)
-								.build())
-						.option(Option.<SkyblockerConfig.BarPosition>createBuilder()
-								.name(Text.translatable("text.autoconfig.skyblocker.option.general.bars.barpositions.manaBarPosition"))
-								.binding(defaults.general.bars.barPositions.manaBarPosition,
-										() -> config.general.bars.barPositions.manaBarPosition,
-										newValue -> config.general.bars.barPositions.manaBarPosition = newValue)
-								.controller(ConfigUtils::createEnumCyclingListController)
-								.build())
-						.option(Option.<SkyblockerConfig.BarPosition>createBuilder()
-								.name(Text.translatable("text.autoconfig.skyblocker.option.general.bars.barpositions.defenceBarPosition"))
-								.binding(defaults.general.bars.barPositions.defenceBarPosition,
-										() -> config.general.bars.barPositions.defenceBarPosition,
-										newValue -> config.general.bars.barPositions.defenceBarPosition = newValue)
-								.controller(ConfigUtils::createEnumCyclingListController)
-								.build())
-						.option(Option.<SkyblockerConfig.BarPosition>createBuilder()
-								.name(Text.translatable("text.autoconfig.skyblocker.option.general.bars.barpositions.experienceBarPosition"))
-								.binding(defaults.general.bars.barPositions.experienceBarPosition,
-										() -> config.general.bars.barPositions.experienceBarPosition,
-										newValue -> config.general.bars.barPositions.experienceBarPosition = newValue)
-								.controller(ConfigUtils::createEnumCyclingListController)
+						.option(ButtonOption.createBuilder()
+								.name(Text.translatable("skyblocker.bars.config.openScreen"))
+								.text(Text.translatable("text.skyblocker.open"))
+								.action((screen, opt) -> MinecraftClient.getInstance().setScreen(new StatusBarsConfigScreen()))
 								.build())
 						.build())
 
@@ -224,6 +202,38 @@ public class GeneralCategory {
 								.binding(defaults.general.fishing.enableFishingHelper,
 										() -> config.general.fishing.enableFishingHelper,
 										newValue -> config.general.fishing.enableFishingHelper = newValue)
+								.controller(ConfigUtils::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.enableFishingTimer"))
+								.description(OptionDescription.of(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.enableFishingTimer.@Tooltip")))
+								.binding(defaults.general.fishing.enableFishingTimer,
+										() -> config.general.fishing.enableFishingTimer,
+										newValue -> config.general.fishing.enableFishingTimer = newValue)
+								.controller(ConfigUtils::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.changeTimerColor"))
+								.description(OptionDescription.of(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.changeTimerColor.@Tooltip")))
+								.binding(defaults.general.fishing.changeTimerColor,
+										() -> config.general.fishing.changeTimerColor,
+										newValue -> config.general.fishing.changeTimerColor = newValue)
+								.controller(ConfigUtils::createBooleanController)
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.fishingTimerScale"))
+								.description(OptionDescription.of(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.fishingTimerScale.@Tooltip")))
+								.binding(defaults.general.fishing.fishingTimerScale,
+										() -> config.general.fishing.fishingTimerScale,
+										newValue -> config.general.fishing.fishingTimerScale = newValue)
+								.controller(FloatFieldControllerBuilder::create)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.hideOtherPlayers"))
+								.description(OptionDescription.of(Text.translatable("text.autoconfig.skyblocker.option.general.fishing.hideOtherPlayers.@Tooltip")))
+								.binding(defaults.general.fishing.hideOtherPlayersRods,
+										() -> config.general.fishing.hideOtherPlayersRods,
+										newValue -> config.general.fishing.hideOtherPlayersRods = newValue)
 								.controller(ConfigUtils::createBooleanController)
 								.build())
 						.build())
@@ -736,6 +746,26 @@ public class GeneralCategory {
 								.binding(defaults.general.searchOverlay.enableCommands,
 										() -> config.general.searchOverlay.enableCommands,
 										newValue -> config.general.searchOverlay.enableCommands = newValue)
+								.controller(ConfigUtils::createBooleanController)
+								.build())
+						.build())
+
+				// Fancy Auction House
+				.group(OptionGroup.createBuilder()
+						.name(Text.translatable("text.autoconfig.skyblocker.option.general.betterAuctionHouse"))
+						.collapsed(true)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.translatable("text.autoconfig.skyblocker.option.general.betterAuctionHouse.enabled"))
+								.binding(defaults.general.fancyAuctionHouse.enabled,
+										() -> config.general.fancyAuctionHouse.enabled,
+										newValue -> config.general.fancyAuctionHouse.enabled = newValue)
+								.controller(ConfigUtils::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.translatable("text.autoconfig.skyblocker.option.general.betterAuctionHouse.highlightUnderAvgPrice"))
+								.binding(defaults.general.fancyAuctionHouse.highlightCheapBIN,
+										() -> config.general.fancyAuctionHouse.highlightCheapBIN,
+										newValue -> config.general.fancyAuctionHouse.highlightCheapBIN = newValue)
 								.controller(ConfigUtils::createBooleanController)
 								.build())
 						.build())

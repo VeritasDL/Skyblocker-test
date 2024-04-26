@@ -15,10 +15,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: '1.20'
 
@@ -34,8 +34,6 @@ jobs:
         shell: bash
         run: |
           OUTPUT=$(go run github.com/josephburnett/jd@latest <(git show HEAD^:src/main/resources/assets/skyblocker/lang/en_us.json) <(git show HEAD:src/main/resources/assets/skyblocker/lang/en_us.json) || true)
-          OUTPUT=$(echo "$OUTPUT" | sed 's/"/\\"/g')
-          OUTPUT=$(echo "$OUTPUT" | sed 's/\\n/\\\\n/g')
           OUTPUT="\`\`\`diff
           $OUTPUT
           \`\`\`"
@@ -45,7 +43,7 @@ jobs:
           "embeds": [
             {
               "title": "Something Changed (Click me)",
-              "description": "'"${OUTPUT//$'\n'/\\n}"'",
+              "description": '"$(echo "$OUTPUT" | jq -Rsa .)"',
               "url": "https://translate.hysky.de/projects/Skyblocker/skyblocker",
               "color": 5808639,
               "image": {
@@ -56,4 +54,9 @@ jobs:
           "attachments": []
           }'
           
-          curl -H "Content-Type: application/json" --data-binary "$JSON_PAYLOAD" "${{ secrets.DISCORD_TRANSLATE_WEBHOOK }}"
+          if echo "$JSON_PAYLOAD" | jq . &>/dev/null; then
+            curl -H "Content-Type: application/json" --data-binary "$JSON_PAYLOAD" "${{ secrets.DISCORD_TRANSLATE_WEBHOOK }}"
+          else
+            echo "Error:"
+            echo "$JSON_PAYLOAD"
+          fi
