@@ -103,6 +103,23 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             //item protection
             if (!this.client.options.inventoryKey.matchesKey(keyCode, scanCode) && ItemProtection.itemProtection.matchesKey(keyCode, scanCode)) {
                 ItemProtection.handleKeyPressed(this.focusedSlot.getStack());
+
+            }
+            //SolveMa
+            if (!this.client.options.inventoryKey.matchesKey(keyCode, scanCode) && UltrasequencerSolver.ClickMaa.matchesKey(keyCode, scanCode)) {
+                assert client.interactionManager != null;
+                assert client.player != null;
+                assert client.currentScreen != null;
+                if (!client.player.getInventory().getStack(49).getName().getString().startsWith("Timer: ")) {
+                    return;
+                }
+                if (UltrasequencerSolver.StoredLast == null) {
+                    return;
+                }
+                //client.currentScreen.mouseMoved(UltrasequencerSolver.StoredLast.id + (30 * (UltrasequencerSolver.StoredLast.id - 9)),UltrasequencerSolver.StoredLast.id - (55 * (UltrasequencerSolver.StoredLast.id - 9)));
+                //GLFW.glfwSetCursorPos(client.getWindow().getHandle(), 820 + (30 * (UltrasequencerSolver.StoredLast.id % 9)),370 + (55 * (55 * ((double)UltrasequencerSolver.StoredLast.id / 9) % 9 - 1)));
+                client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, UltrasequencerSolver.StoredLast.id, 0, SlotActionType.PICKUP, client.player);
+                skyblocker$onSlotClick(UltrasequencerSolver.StoredLast, UltrasequencerSolver.StoredLast.id, 0,SlotActionType.THROW, new CallbackInfo("onMouseClick",true));
             }
         }
     }

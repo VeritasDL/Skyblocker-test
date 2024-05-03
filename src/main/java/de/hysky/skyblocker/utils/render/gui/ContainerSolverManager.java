@@ -131,6 +131,7 @@ public class ContainerSolverManager {
             Slot slot = slots.get(highlight.slot());
             int color = highlight.color();
             context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, color);
+            UltrasequencerSolver.StoredLast = slots.get(highlight.slot());
         }
         RenderSystem.colorMask(true, true, true, true);
     }

@@ -3,10 +3,15 @@ package de.hysky.skyblocker.skyblock.experiment;
 import de.hysky.skyblocker.config.SkyblockerConfig;
 import de.hysky.skyblocker.utils.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +19,8 @@ import java.util.List;
 public class UltrasequencerSolver extends ExperimentSolver {
     public static final UltrasequencerSolver INSTANCE = new UltrasequencerSolver();
     private int ultrasequencerNextSlot;
+    public static KeyBinding ClickMaa;
+    public static Slot StoredLast;
 
     private UltrasequencerSolver() {
         super("^Ultrasequencer \\(\\w+\\)$");
@@ -25,6 +32,15 @@ public class UltrasequencerSolver extends ExperimentSolver {
 
     public void setUltrasequencerNextSlot(int ultrasequencerNextSlot) {
         this.ultrasequencerNextSlot = ultrasequencerNextSlot;
+    }
+
+    public static void init() {
+        ClickMaa = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.SolveMa",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_W,
+                "key.categories.skyblocker"
+        ));
     }
 
     @Override
@@ -74,7 +90,6 @@ public class UltrasequencerSolver extends ExperimentSolver {
             reset();
         }
     }
-
     @Override
     protected List<ColorHighlight> getColors(String[] groups, Int2ObjectMap<ItemStack> slots) {
         return getState() == State.SHOW && ultrasequencerNextSlot != 0 ? List.of(ColorHighlight.green(ultrasequencerNextSlot)) : new ArrayList<>();
