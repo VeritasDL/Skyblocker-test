@@ -2,6 +2,7 @@ package de.hysky.skyblocker.skyblock.garden;
 
 import de.hysky.skyblocker.SkyblockerMod;
 import de.hysky.skyblocker.config.SkyblockerConfigManager;
+import de.hysky.skyblocker.events.HudRenderEvents;
 import de.hysky.skyblocker.utils.ItemUtils;
 import de.hysky.skyblocker.utils.Location;
 import de.hysky.skyblocker.utils.Utils;
@@ -12,7 +13,6 @@ import it.unimi.dsi.fastutil.longs.LongArrayFIFOQueue;
 import it.unimi.dsi.fastutil.longs.LongPriorityQueue;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
@@ -34,14 +34,14 @@ public class FarmingHud {
     private static final Logger LOGGER = LoggerFactory.getLogger(FarmingHud.class);
     public static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(Locale.US);
     private static final Pattern COUNTER = Pattern.compile("Counter: (?<count>[\\d,]+) .+");
-    private static final Pattern FARMING_XP = Pattern.compile("§3\\+(?<xp>\\d+.?\\d*) Farming \\((?<percent>\\d+.?\\d*)%\\)");
+    private static final Pattern FARMING_XP = Pattern.compile("§3\\+(?<xp>\\d+.?\\d*) Farming \\((?<percent>[\\d,]+.?\\d*)%\\)");
     private static final Deque<IntLongPair> counter = new ArrayDeque<>();
     private static final LongPriorityQueue blockBreaks = new LongArrayFIFOQueue();
     private static final Queue<FloatLongPair> farmingXp = new ArrayDeque<>();
     private static float farmingXpPercentProgress;
 
     public static void init() {
-        HudRenderCallback.EVENT.register((context, tickDelta) -> {
+        HudRenderEvents.AFTER_MAIN_HUD.register((context, tickDelta) -> {
             if (shouldRender()) {
                 if (!counter.isEmpty() && counter.peek().rightLong() + 10_000 < System.currentTimeMillis()) {
                     counter.poll();
@@ -54,7 +54,7 @@ public class FarmingHud {
                 }
 
                 ItemStack stack = MinecraftClient.getInstance().player.getMainHandStack();
-                Matcher matcher = ItemUtils.getNbtTooltip(stack, FarmingHud.COUNTER);
+                Matcher matcher = ItemUtils.getLoreLineIfMatch(stack, FarmingHud.COUNTER);
                 if (matcher != null) {
                     try {
                         int count = NUMBER_FORMAT.parse(matcher.group("count")).intValue();
@@ -118,6 +118,6 @@ public class FarmingHud {
     }
 
     public static double farmingXpPerHour() {
-        return farmingXp.stream().mapToDouble(FloatLongPair::leftFloat).sum() * 3600;
+        return farmingXp.stream().mapToDouble(FloatLongPair::leftFloat).sum() * blockBreaks() * 1800; // Hypixel only sends xp updates around every half a second
     }
 }
