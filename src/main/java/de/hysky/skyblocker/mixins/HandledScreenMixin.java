@@ -15,6 +15,7 @@ import de.hysky.skyblocker.skyblock.item.WikiLookup;
 import de.hysky.skyblocker.skyblock.item.tooltip.BackpackPreview;
 import de.hysky.skyblocker.skyblock.item.tooltip.CompactorDeletorPreview;
 import de.hysky.skyblocker.utils.ItemUtils;
+import de.hysky.skyblocker.utils.Location;
 import de.hysky.skyblocker.utils.Utils;
 import de.hysky.skyblocker.utils.render.gui.ContainerSolver;
 import net.minecraft.client.gui.DrawContext;
@@ -110,7 +111,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 assert client.interactionManager != null;
                 assert client.player != null;
                 assert client.currentScreen != null;
-                if (!client.player.getInventory().getStack(49).getName().getString().startsWith("Timer: ")) {
+                if (Utils.getLocation() != Location.PRIVATE_ISLAND) {
                     return;
                 }
                 if (UltrasequencerSolver.StoredLast == null) {
@@ -118,8 +119,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
                 //client.currentScreen.mouseMoved(UltrasequencerSolver.StoredLast.id + (30 * (UltrasequencerSolver.StoredLast.id - 9)),UltrasequencerSolver.StoredLast.id - (55 * (UltrasequencerSolver.StoredLast.id - 9)));
                 //GLFW.glfwSetCursorPos(client.getWindow().getHandle(), 820 + (30 * (UltrasequencerSolver.StoredLast.id % 9)),370 + (55 * (55 * ((double)UltrasequencerSolver.StoredLast.id / 9) % 9 - 1)));
+                client.currentScreen.mouseClicked(UltrasequencerSolver.StoredLast.x, UltrasequencerSolver.StoredLast.y,0);
                 client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, UltrasequencerSolver.StoredLast.id, 0, SlotActionType.PICKUP, client.player);
                 skyblocker$onSlotClick(UltrasequencerSolver.StoredLast, UltrasequencerSolver.StoredLast.id, 0,SlotActionType.THROW, new CallbackInfo("onMouseClick",true));
+                client.currentScreen.mouseReleased(UltrasequencerSolver.StoredLast.x, UltrasequencerSolver.StoredLast.y,0);
             }
         }
     }
