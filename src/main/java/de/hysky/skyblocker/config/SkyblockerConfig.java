@@ -113,7 +113,6 @@ public class SkyblockerConfig {
 
 		@SerialEntry
 		public QuickNavItem button14 = new QuickNavItem(true, new ItemData("chest"), "New Quick Nav 2", "/command");
-
 	}
 
 	public static class QuickNavItem {
